@@ -20,7 +20,7 @@ public class NetworkModule {
     //@Singleton
     Retrofit provideRetrofit() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://10.215.136.152/")
+                .baseUrl("http://10.215.136.212/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

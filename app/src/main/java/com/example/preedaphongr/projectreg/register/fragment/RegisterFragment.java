@@ -4,11 +4,22 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 
 import com.example.preedaphongr.projectreg.R;
+import com.example.preedaphongr.projectreg.register.adapter.RegisterAdapter;
+import com.example.preedaphongr.projectreg.register.model.Course;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,15 +35,25 @@ public class RegisterFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
+    private static List<Course> list_register = new ArrayList<>();
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    @Bind(R.id.list_register)
+    RecyclerView recyclerView;
+
+    private RegisterAdapter adapter;
 
     public RegisterFragment() {
         // Required empty public constructor
     }
+
+
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -65,7 +86,12 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        View view = inflater.inflate(R.layout.fragment_register, container, false);
+        ButterKnife.bind(this,view);
+        adapter = new RegisterAdapter(list_register);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

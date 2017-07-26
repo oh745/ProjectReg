@@ -1,7 +1,7 @@
 -  request:
       method: POST
       url: /searchData
-      post: '{"majorId":"1","term":"1"}'
+      post: '{"majorId":1,"term":1}'
    response:
       status: 200
       headers:
@@ -10,7 +10,7 @@
 -  request:
       method: POST
       url: /searchData
-      post: '{"majorId":"1","term":"2"}'
+      post: '{"majorId":1,"term":2}'
    response:
       status: 200
       headers:

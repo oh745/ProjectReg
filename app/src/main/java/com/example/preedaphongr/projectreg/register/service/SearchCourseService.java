@@ -2,6 +2,7 @@ package com.example.preedaphongr.projectreg.register.service;
 
 import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.register.model.CourseRequest;
+import com.example.preedaphongr.projectreg.register.model.CourseResponse;
 
 import javax.inject.Inject;
 
@@ -18,7 +19,7 @@ public class SearchCourseService {
     public SearchCourseService(SearchCourseAPI searchCourseAPI) {
         this.searchCourseAPI = searchCourseAPI;
     }
-    public Call<Course> loadCourse(CourseRequest courseRequest){
+    public Call<CourseResponse> loadCourse(CourseRequest courseRequest){
         return searchCourseAPI.getCourseList(courseRequest);
     }
 }

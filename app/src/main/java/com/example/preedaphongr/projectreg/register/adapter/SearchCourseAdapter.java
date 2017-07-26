@@ -28,9 +28,15 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
 
     List<Course> mValues;
     Context mContext;
-    public SearchCourseAdapter(Context mContext,List<Course> mValues) {
+    SearchAdapterCallback callback;
+    public SearchCourseAdapter(Context mContext,List<Course> mValues,SearchAdapterCallback callback) {
         this.mContext = mContext;
         this.mValues = mValues;
+        this.callback = callback;
+    }
+
+    public interface SearchAdapterCallback{
+        void onClickAdd(Course course);
     }
 
     @Override
@@ -48,11 +54,11 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
         else {
             holder.mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_outline_black_24dp);
         }*/
-    //    Course course = mValues.get(position);
-    //    holder.mCourseId.setText(course.getCourseId());
-    //    holder.mCourseName.setText(course.getCourseName());
-    //    holder.mTerm.setText(String.valueOf(course.getTerm()));
-    //    holder.mYear.setText(course.getYear());
+        Course course = mValues.get(position);
+        holder.mCourseId.setText(course.getCourseId());
+        holder.mCourseName.setText(course.getCourseName());
+        holder.mTerm.setText(String.valueOf(course.getTerm()));
+        holder.mYear.setText(course.getYear());
     }
 
     @Override
@@ -85,6 +91,7 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
                     } else {
                         mAddCourse.setSelected(true);
                         mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_black_24dp);
+                        callback.onClickAdd(mValues.get(getAdapterPosition()));
                     }
 
 

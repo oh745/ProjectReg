@@ -30,6 +30,7 @@ import com.example.preedaphongr.projectreg.register.fragment.RegisterFragment;
 import com.example.preedaphongr.projectreg.register.fragment.SearchCourseFragment;
 import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.register.model.CourseRequest;
+import com.example.preedaphongr.projectreg.register.model.CourseResponse;
 import com.example.preedaphongr.projectreg.register.presenter.SearchCoursePresenter;
 import com.example.preedaphongr.projectreg.register.service.SearchCourseAPI;
 
@@ -88,45 +89,41 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
-        /*tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager){
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                super.onTabSelected(tab);
-                if(tab.getPosition() == 0 ){
-                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL | AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS);
-                }
-                if(tab.getPosition() == 1 ){
-                    params.setScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP);
-                }
-            }
-        });*/
+
 
         ((BaseApplication)getApplication()).getSearchCourseComponent()
                 .inject(this);
+
+
+    }
+
+
+    public void callRetrofit(int term){
         if(retrofit != null){
-            Toast.makeText(getBaseContext(),"ok",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getBaseContext(),"ok",Toast.LENGTH_SHORT).show();
             SearchCourseAPI api = retrofit.create(SearchCourseAPI.class);
-            Call call = api.getCourseList(new CourseRequest(1,1));
-            call.enqueue(new Callback() {
+            Call call = api.getCourseList(new CourseRequest(term,1));
+            call.enqueue(new Callback<CourseResponse>() {
                 @Override
-                public void onResponse(Call call, Response response) {
+                public void onResponse(Call<CourseResponse> call, Response<CourseResponse> response) {
                     if(response.isSuccessful()){
                         Log.d("@@@","******************success********************");
+                        searchCourseFragment.setAdapter(response.body());
                     }
                     else {
                         Log.d("@@@","******************unsuccess********************");
+                        Log.d("@@@",response.message());
+
                     }
                 }
 
                 @Override
-                public void onFailure(Call call, Throwable t) {
+                public void onFailure(Call<CourseResponse> call, Throwable t) {
                     Log.d("@@@","******************Fail********************");
                 }
             });
         }
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -172,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch (position){
                 case 0: searchCourseFragment = SearchCourseFragment.newInstance("","");
+                    setConnection();
                     return searchCourseFragment;
 
                 case 1: registerFragment = RegisterFragment.newInstance("","");
@@ -200,5 +198,8 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
             }
             return null;
         }
+    }
+    public void setConnection(){
+        searchCourseFragment.setMainActivity(this);
     }
 }

@@ -8,7 +8,7 @@ public class CourseRequest {
     private int term;
     private int majorId;
 
-    public CourseRequest(int majorId, int term) {
+    public CourseRequest(int term, int majorId) {
         this.term = term;
         this.majorId = majorId;
     }

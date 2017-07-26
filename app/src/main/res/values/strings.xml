@@ -4,7 +4,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="search_course">ค้นหารายวิชา</string>
     <string name="search">ค้นหา</string>
-    <string name="semester">ภาคเรียน</string>
+    <string name="semester">ภาคเรียนที่</string>
     <string name="register">ลงทะเบียน</string>
     <string name="select_faculty">เลือกคณะ</string>
     <string name="select_semester">เลือกภาคเรียน</string>

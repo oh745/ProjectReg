@@ -6,7 +6,10 @@ import android.view.View;
 import com.example.preedaphongr.projectreg.register.fragment.SearchCourseFragment;
 import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.register.model.CourseRequest;
+import com.example.preedaphongr.projectreg.register.model.CourseResponse;
 import com.example.preedaphongr.projectreg.register.service.SearchCourseService;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -29,13 +32,18 @@ public class SearchCoursePresenter {
         this.view = view;
     }
 
+    public interface View{
+        public void setAdapter(CourseResponse courseResponse);
+    }
+
 
     public void sendSearchCourseRequest(int majorId ,int semester){
-        searchCourseService.loadCourse(new CourseRequest(majorId,semester)).enqueue(new Callback<Course>() {
+        searchCourseService.loadCourse(new CourseRequest(majorId,semester)).enqueue(new Callback<CourseResponse>() {
             @Override
-            public void onResponse(Call<Course> call, Response<Course> response) {
+            public void onResponse(Call<CourseResponse> call, Response<CourseResponse> response) {
                 if(response.isSuccessful()){
                     Log.d("@@@","******************success********************");
+                    view.setAdapter(response.body());
                 }
                 else {
                     Log.d("@@@","******************unsuccess********************");
@@ -43,7 +51,7 @@ public class SearchCoursePresenter {
             }
 
             @Override
-            public void onFailure(Call<Course> call, Throwable t) {
+            public void onFailure(Call<CourseResponse> call, Throwable t) {
                 Log.d("@@@","******************Fail********************");
             }
         });

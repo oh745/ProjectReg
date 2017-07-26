@@ -18,8 +18,10 @@ import android.widget.Toast;
 
 import com.example.preedaphongr.projectreg.BaseApplication;
 import com.example.preedaphongr.projectreg.R;
+import com.example.preedaphongr.projectreg.register.activity.MainActivity;
 import com.example.preedaphongr.projectreg.register.adapter.SearchCourseAdapter;
 import com.example.preedaphongr.projectreg.register.model.Course;
+import com.example.preedaphongr.projectreg.register.model.CourseResponse;
 import com.example.preedaphongr.projectreg.register.presenter.SearchCoursePresenter;
 
 import java.util.ArrayList;
@@ -38,7 +40,7 @@ import butterknife.ButterKnife;
  * Use the {@link SearchCourseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchCourseFragment extends Fragment {
+public class SearchCourseFragment extends Fragment implements SearchCoursePresenter.View,SearchCourseAdapter.SearchAdapterCallback {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -132,27 +134,21 @@ public class SearchCourseFragment extends Fragment {
         spinnerSemester.setAdapter(adapterSemester);
         spinnerSemester.setSelection(adapterSemester.getCount());
 
-        List<Course> list = new ArrayList<>();
+        /*List<Course> list = new ArrayList<>();
         list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
-        list.add(null);
+        list.add(null);list.add(null);
+        list.add(null);list.add(null);
+        list.add(null);list.add(null);
+        list.add(null);list.add(null);
+        list.add(null);*/
 
         setSearchButton();
 
-        adapter = new SearchCourseAdapter(getContext(),list);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
-        //searchCoursePresenter = new SearchCoursePresenter();
-        //searchCoursePresenter.setView(view);
+
+        searchCoursePresenter = new SearchCoursePresenter();
+        searchCoursePresenter.setView(this);
 
         return view;
     }
@@ -166,8 +162,9 @@ public class SearchCourseFragment extends Fragment {
                     String major = spinnerMajor.getSelectedItem().toString();
                     int semester = spinnerSemester.getSelectedItemPosition();
                     //searchCoursePresenter.sendSearchCourseRequest(1,semester);
+                    Log.d("@@@",String.valueOf(semester));
+                    mainActivity.callRetrofit(semester);
 
-                    //Toast.makeText(getContext(), String.valueOf(semester), Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(getContext(), "กรุณาเลือกคณะและภาคเรียน", Toast.LENGTH_SHORT).show();
                 }
@@ -175,6 +172,10 @@ public class SearchCourseFragment extends Fragment {
         });
     }
 
+    MainActivity mainActivity;
+    public void setMainActivity(MainActivity mainActivity){
+        this.mainActivity = mainActivity;
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -200,6 +201,18 @@ public class SearchCourseFragment extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void setAdapter(CourseResponse courseResponse) {
+        adapter = new SearchCourseAdapter(getContext(),courseResponse.getCourseList(),this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    }
+
+    @Override
+    public void onClickAdd(Course course) {
+
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -215,7 +228,5 @@ public class SearchCourseFragment extends Fragment {
         void onFragmentInteraction(Uri uri);
     }
 
-    public void setCourseList(){
 
-    }
 }

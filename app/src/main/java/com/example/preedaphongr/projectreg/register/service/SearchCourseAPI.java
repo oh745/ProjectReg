@@ -2,6 +2,7 @@ package com.example.preedaphongr.projectreg.register.service;
 
 import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.register.model.CourseRequest;
+import com.example.preedaphongr.projectreg.register.model.CourseResponse;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -14,5 +15,5 @@ import retrofit2.http.POST;
 public interface SearchCourseAPI {
 
     @POST("searchData")
-    Call<Course> getCourseList(@Body CourseRequest courseRequest);
+    Call<CourseResponse> getCourseList(@Body CourseRequest courseRequest);
 }
