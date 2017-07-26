@@ -1,0 +1,105 @@
+{
+  "courseList": [
+    {
+      "courseName": "Discrete Structure",
+      "courseId": "CS101",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Structure Programming",
+      "courseId": "CS102",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Computer Architecture",
+      "courseId": "CS223",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Data Structure",
+      "courseId": "CS213",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Programming using API",
+      "courseId": "CS211",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Intro to Software Engineer",
+      "courseId": "CS284",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Software Requirement Specification and Management",
+      "courseId": "CS287",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Fundamentals of Computer Graphics",
+      "courseId": "CS298",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Mobile Application",
+      "courseId": "CS355",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Special Topic1",
+      "courseId": "CS401",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    },
+    {
+      "courseName": "Formal Methods",
+      "courseId": "CS488",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "1",
+      "term": "1",
+      "year": "2560"
+    }
+
+]
+ 
+}

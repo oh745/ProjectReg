@@ -1,0 +1,69 @@
+{
+  "courseList": [
+    {
+      "courseName": "Object Oriented Programming",
+      "courseId": "CS111",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "2",
+      "term": "2",
+      "year": "2560"
+    },
+    {
+      "courseName": "Social & Professional Ethics",
+      "courseId": "CS214",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "2",
+      "term": "2",
+      "year": "2560"
+    },
+    {
+      "courseName": "Database Systems 1",
+      "courseId": "CS251",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "2",
+      "term": "2",
+      "year": "2560"
+    },
+    {
+      "courseName": "Object-Oriented Analysis & Design",
+      "courseId": "CS281",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "2",
+      "term": "2",
+      "year": "2560"
+    },
+    {
+      "courseName": "Introduction to Software Testing",
+      "courseId": "CS288",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "2",
+      "term": "2",
+      "year": "2560"
+    },
+    {
+      "courseName": "Computer Security",
+      "courseId": "CS302",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "2",
+      "term": "2",
+      "year": "2560"
+    },
+    {
+      "courseName": "Special Projects 2",
+      "courseId": "CS402",
+      "majorName": "Com-Sci",
+      "majorId": "1",
+      "termId": "2",
+      "term": "2",
+      "year": "2560"
+    }
+
+
+  ]
+}
