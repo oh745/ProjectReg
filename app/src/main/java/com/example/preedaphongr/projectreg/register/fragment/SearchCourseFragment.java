@@ -23,6 +23,9 @@ import com.example.preedaphongr.projectreg.register.adapter.SearchCourseAdapter;
 import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.register.model.CourseResponse;
 import com.example.preedaphongr.projectreg.register.presenter.SearchCoursePresenter;
+import com.example.preedaphongr.projectreg.util.AddCourseEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -210,7 +213,9 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
     @Override
     public void onClickAdd(Course course) {
+        EventBus.getDefault().post(new AddCourseEvent(course));
 
+        Log.d("@@@","******************event bus post*******************");
     }
 
     /**

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,10 @@ import android.widget.Adapter;
 import com.example.preedaphongr.projectreg.R;
 import com.example.preedaphongr.projectreg.register.adapter.RegisterAdapter;
 import com.example.preedaphongr.projectreg.register.model.Course;
+import com.example.preedaphongr.projectreg.util.AddCourseEvent;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,9 +56,24 @@ public class RegisterFragment extends Fragment {
         // Required empty public constructor
     }
 
+    @Subscribe
+    public void onAddCourseEvent(AddCourseEvent addCourseEvent){
+        list_register.add(addCourseEvent.course);
+        adapter.notifyDataSetChanged();
+        Log.d("@@@","******************eventbus receive********************");
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
 
     /**
      * Use this factory method to create a new instance of
