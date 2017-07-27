@@ -1,11 +1,18 @@
 package com.example.preedaphongr.projectreg.register.fragment;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +23,8 @@ import com.example.preedaphongr.projectreg.R;
 import com.example.preedaphongr.projectreg.register.adapter.RegisterAdapter;
 import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.util.AddCourseEvent;
+import com.example.preedaphongr.projectreg.util.RemoveCourseEvent;
+import com.example.preedaphongr.projectreg.util.RemoveFromRegisterEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -61,6 +70,17 @@ public class RegisterFragment extends Fragment {
         list_register.add(addCourseEvent.course);
         adapter.notifyDataSetChanged();
         Log.d("@@@","******************eventbus receive********************");
+    }
+    @Subscribe
+    public void onRemoveCourseEvent(RemoveCourseEvent removeCourseEvent){
+        Course course = removeCourseEvent.course;
+        for (int i = 0; i < list_register.size(); i++) {
+            if(course.getCourseId().equals(list_register.get(i).getCourseId())){
+                list_register.remove(i);
+                adapter.notifyDataSetChanged();
+                break;
+            }
+        }
     }
 
     @Override
@@ -111,6 +131,50 @@ public class RegisterFragment extends Fragment {
         adapter = new RegisterAdapter(list_register);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+                int position = viewHolder.getAdapterPosition();
+                //************************************************************8
+                EventBus.getDefault().post(new RemoveFromRegisterEvent(list_register.get(position)));
+                list_register.remove(position);
+                adapter.notifyItemRemoved(position);
+
+
+            }
+
+            @Override
+            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+
+                if(actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
+
+                    View itemView = viewHolder.itemView;
+                    float height = (float) itemView.getBottom() - (float) itemView.getTop();
+                    float width = height / 3;
+
+                    Paint p = new Paint();
+                    p.setColor(Color.parseColor("#D32F2F"));
+                    RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(), (float) itemView.getRight(), (float) itemView.getBottom());
+                    c.drawRect(background, p);
+
+
+                    Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.ic_delete_sweep_white_24dp);
+                    RectF icon_dest = new RectF((float) itemView.getRight() - 2*width ,(float) itemView.getTop() + width,(float) itemView.getRight() - width,(float)itemView.getBottom() - width);
+                    c.drawBitmap(icon,null,icon_dest,p);
+                }
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
+
         return view;
     }
 

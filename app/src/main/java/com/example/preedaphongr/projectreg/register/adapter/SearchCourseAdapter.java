@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.preedaphongr.projectreg.R;
+import com.example.preedaphongr.projectreg.register.fragment.SearchCourseFragment;
 import com.example.preedaphongr.projectreg.register.model.Course;
 
 import java.util.List;
@@ -37,6 +38,7 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
 
     public interface SearchAdapterCallback{
         void onClickAdd(Course course);
+        void onClickRemove(Course course);
     }
 
     @Override
@@ -48,13 +50,17 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
 
     @Override
     public void onBindViewHolder(SearchCourseAdapter.ViewHolder holder, int position) {
-       /* if (holder.mAddCourse.isSelected()) {
+
+        Course course = mValues.get(position);
+        if (SearchCourseFragment.addcourse_hm.get(course.getCourseId()) != null) {
             holder.mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_black_24dp);
+            holder.mAddCourse.setSelected(true);
         }
         else {
             holder.mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_outline_black_24dp);
-        }*/
-        Course course = mValues.get(position);
+            holder.mAddCourse.setSelected(false);
+        }
+
         holder.mCourseId.setText(course.getCourseId());
         holder.mCourseName.setText(course.getCourseName());
         holder.mTerm.setText(String.valueOf(course.getTerm()));
@@ -88,6 +94,7 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
                     if (mAddCourse.isSelected()) {
                         mAddCourse.setSelected(false);
                         mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_outline_black_24dp);
+                        callback.onClickRemove(mValues.get(getAdapterPosition()));
                     } else {
                         mAddCourse.setSelected(true);
                         mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_black_24dp);

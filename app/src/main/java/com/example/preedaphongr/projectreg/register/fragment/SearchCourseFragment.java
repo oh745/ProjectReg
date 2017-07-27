@@ -24,10 +24,14 @@ import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.register.model.CourseResponse;
 import com.example.preedaphongr.projectreg.register.presenter.SearchCoursePresenter;
 import com.example.preedaphongr.projectreg.util.AddCourseEvent;
+import com.example.preedaphongr.projectreg.util.RemoveCourseEvent;
+import com.example.preedaphongr.projectreg.util.RemoveFromRegisterEvent;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -72,6 +76,8 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
     SearchCoursePresenter searchCoursePresenter;
 
     private SearchCourseAdapter adapter;
+
+    public static HashMap<String,Boolean> addcourse_hm = new HashMap<>();
 
     public SearchCourseFragment() {
         // Required empty public constructor
@@ -214,9 +220,36 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
     @Override
     public void onClickAdd(Course course) {
         EventBus.getDefault().post(new AddCourseEvent(course));
-
+        addcourse_hm.put(course.getCourseId(),true);
         Log.d("@@@","******************event bus post*******************");
     }
+
+    @Override
+    public void onClickRemove(Course course) {
+        EventBus.getDefault().post(new RemoveCourseEvent(course));
+        addcourse_hm.remove(course.getCourseId());
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onRemoveFromRegisterEvent(RemoveFromRegisterEvent fromRegisterEvent){
+        addcourse_hm.remove(fromRegisterEvent.course.getCourseId());
+        adapter.notifyDataSetChanged();
+
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this

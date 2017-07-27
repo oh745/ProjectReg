@@ -34,6 +34,8 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
     @Override
     public void onBindViewHolder(RegisterAdapter.ViewHolder holder, int position) {
 
+        holder.mCourseId.setText(mValues.get(position).getCourseId());
+        holder.mCourseName.setText(mValues.get(position).getCourseName());
     }
 
     @Override
