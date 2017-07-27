@@ -1,37 +1,30 @@
 package com.example.preedaphongr.projectreg.register.activity;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.preedaphongr.projectreg.BaseApplication;
 import com.example.preedaphongr.projectreg.R;
 import com.example.preedaphongr.projectreg.register.fragment.RegisterFragment;
 import com.example.preedaphongr.projectreg.register.fragment.SearchCourseFragment;
-import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.register.model.CourseRequest;
 import com.example.preedaphongr.projectreg.register.model.CourseResponse;
-import com.example.preedaphongr.projectreg.register.presenter.SearchCoursePresenter;
 import com.example.preedaphongr.projectreg.register.service.SearchCourseAPI;
 
 import javax.inject.Inject;
@@ -43,7 +36,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements SearchCourseFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SearchCourseFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -64,6 +57,9 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
     private TabLayout tabLayout;
 
     @Bind(R.id.appbar)AppBarLayout toolbarLayout;
+    @Bind(R.id.drawer_layout)DrawerLayout drawerLayout;
+    @Bind(R.id.toolbar)Toolbar toolbar;
+
 
     @Inject
     Retrofit retrofit;
@@ -94,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
         ((BaseApplication)getApplication()).getSearchCourseComponent()
                 .inject(this);
 
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,drawerLayout, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
     }
 
@@ -113,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
                     else {
                         Log.d("@@@","******************unsuccess********************");
                         Log.d("@@@",response.message());
-
                     }
                 }
 
@@ -150,6 +148,12 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
     @Override
     public void onFragmentInteraction(Uri uri) {
 
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        return false;
     }
 
 
