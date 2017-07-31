@@ -53,11 +53,13 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
 
         Course course = mValues.get(position);
         if (SearchCourseFragment.addcourse_hm.get(course.getCourseId()) != null) {
-            holder.mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_black_24dp);
+            //holder.mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_black_24dp);
+            holder.mAddCourse.setChecked(true);
             holder.mAddCourse.setSelected(true);
         }
         else {
-            holder.mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_outline_black_24dp);
+            //holder.mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_outline_black_24dp);
+            holder.mAddCourse.setChecked(false);
             holder.mAddCourse.setSelected(false);
         }
 
@@ -93,11 +95,11 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
                 case R.id.add_favorite_checkBox:
                     if (mAddCourse.isSelected()) {
                         mAddCourse.setSelected(false);
-                        mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_outline_black_24dp);
+                        //mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_outline_black_24dp);
                         callback.onClickRemove(mValues.get(getAdapterPosition()));
                     } else {
                         mAddCourse.setSelected(true);
-                        mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_black_24dp);
+                        //mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_black_24dp);
                         callback.onClickAdd(mValues.get(getAdapterPosition()));
                     }
 

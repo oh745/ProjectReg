@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.preedaphongr.projectreg.R;
+import com.example.preedaphongr.projectreg.profile.ProfileActivity;
 import com.example.preedaphongr.projectreg.register.activity.MainActivity;
 
 import butterknife.Bind;
@@ -40,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void loginSuccess(){
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
 
     }
