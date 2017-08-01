@@ -25,7 +25,7 @@
             <FrameLayout
                 android:id="@+id/main.framelayout.title"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="138dp"
                 android:layout_gravity="bottom|center_horizontal"
                 android:background="@color/colorPrimary"
                 android:orientation="vertical"
@@ -105,10 +105,12 @@
             android:orientation="horizontal"
             >
 
-            <Space
+          <!--
+           <Space
                 android:layout_width="@dimen/image_final_width"
                 android:layout_height="@dimen/image_final_width"
                 />
+          -->
 
             <TextView
                 android:id="@+id/main.textview.title"
@@ -127,7 +129,7 @@
         android:layout_width="@dimen/image_width"
         android:layout_height="@dimen/image_width"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/logo"
+        android:src="@drawable/avataricon"
         app:border_color="@android:color/white"
         app:border_width="2dp"
         app:finalHeight="@dimen/image_final_width"

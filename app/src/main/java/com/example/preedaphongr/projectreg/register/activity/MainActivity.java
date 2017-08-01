@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -37,7 +38,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,SearchCourseFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener{
+public class MainActivity extends AppCompatActivity implements SearchCourseFragment.OnFragmentInteractionListener, RegisterFragment.OnFragmentInteractionListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -57,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private ViewPager mViewPager;
     private TabLayout tabLayout;
 
-    @Bind(R.id.appbar)AppBarLayout toolbarLayout;
-    @Bind(R.id.drawer_layout)DrawerLayout drawerLayout;
     @Bind(R.id.toolbar)Toolbar toolbar;
 
 
@@ -68,13 +67,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        //  Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //  setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
+        setContentView(R.layout.content_register);
         ButterKnife.bind(this);
+
+
+        // Create the adapter that will return a fragment for each of the three
+        setSupportActionBar(toolbar);
+        // primary sections of the activity.
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
 
         //final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbarLayout.getLayoutParams();
 
@@ -91,9 +94,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ((BaseApplication)getApplication()).getSearchCourseComponent()
                 .inject(this);
 
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,drawerLayout, toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
-        drawerLayout.setDrawerListener(drawerToggle);
-        drawerToggle.syncState();
 
     }
 
@@ -132,14 +132,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            return true;
+        }
+        if(id == android.R.id.home){
+            super.onBackPressed();
             return true;
         }
 
@@ -149,22 +162,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onFragmentInteraction(Uri uri) {
 
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.nav_profile) {
-
-            Toast.makeText(getBaseContext(),"profile",Toast.LENGTH_SHORT).show();
-
-        } else if (id == R.id.nav_enrolled) {
-
-        }
-
-
-        return false;
     }
 
 

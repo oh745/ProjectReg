@@ -16,3 +16,30 @@
       headers:
          content-type: application/json
       file: requestTerm2.json
+-  request:
+      method: POST
+      url: /loginData
+      post: '{"stdId":"5609650188","password":"81dc9bdb52d04dc20036dbd8313ed055"}'
+   response:
+      status: 200
+      headers:
+         content-type: application/json
+      file: requestLoginSuccess.json
+-  request:
+      method: POST
+      url: /loginData
+      post: '{"stdId":"oh","password":"81dc9bdb52d04dc20036dbd8313ed055"}'
+   response:
+      status: 200
+      headers:
+         content-type: application/json
+      file: requestLoginFail.json
+-  request:
+      method: POST
+      url: /personalData
+      post: '{"stdId":"5609650188"}'
+   response:
+      status: 200
+      headers:
+         content-type: application/json
+      file: requestPersonal.json

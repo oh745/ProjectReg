@@ -14,8 +14,10 @@
     <string name="year">ปีการศึกษา</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="enrolled">ผลการจดทะเบียน</string>
+    <string name="logout">ออกจากระบบ</string>
     <string name="profile">ประวัตินักศึกษา</string>
+    <string name="login_alert">กรุณากรอกเลขทะเบียนและรหัสผ่าน</string>
+    <string name="login_alert2">เลขทะเบียนหรือรหัสผ่านไม่ถูกต้อง</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

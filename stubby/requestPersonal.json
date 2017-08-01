@@ -1,0 +1,25 @@
+{
+  "stdId": "5609650188",
+  "firstName": "Krittiya",
+  "lastName": "Boonteeranon",
+  "majorId": "4",
+  "majorName": "วิทยาศาสตร์",
+
+  "registeredList":[
+    {"courseId": "cs101",
+      "courseName": "Discrete Structure"
+    },
+    {"courseId": "cs111",
+      "courseName": "OOP"
+    },
+    {"courseId": "cs213",
+      "courseName": "Data Structure"
+    },
+    {"courseId": "cs302",
+      "courseName": "Computer Security"
+    },
+    {"courseId": "cs402",
+      "courseName": "Special Topic 2"
+    }
+  ]
+}

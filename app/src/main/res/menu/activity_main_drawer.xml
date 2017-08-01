@@ -3,21 +3,14 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_profile"
+            android:id="@+id/nav_register"
 
-            android:title="@string/profile" />
+            android:title="@string/register" />
+
         <item
-            android:id="@+id/nav_enrolled"
+            android:id="@+id/nav_logout"
 
-            android:title="@string/enrolled" />
-        <item
-            android:id="@+id/nav_slideshow"
-
-            android:title="Slideshow" />
-        <item
-            android:id="@+id/nav_manage"
-
-            android:title="Tools" />
+            android:title="@string/logout" />
     </group>
 
 

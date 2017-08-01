@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <include
-        layout="@layout/content_main"
+        layout="@layout/activity_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
