@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
@@ -72,6 +73,7 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
     @Bind(R.id.search_list)RecyclerView recyclerView;
 
     @Bind(R.id.search_button)Button searchButton;
+    @Bind(R.id.layout_next_button)LinearLayout linearLayoutNextbtn;
 
     @Inject
     Retrofit retrofit;
@@ -117,6 +119,16 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
         }
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (addcourse_hm.size() > 0) {
+            linearLayoutNextbtn.setVisibility(View.VISIBLE);
+        } else {
+            linearLayoutNextbtn.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -222,13 +234,22 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
         EventBus.getDefault().post(new AddCourseEvent(course));
         addcourse_hm.put(course.getCourseId(),true);
         Log.d("@@@","******************event bus post*******************");
+        if (addcourse_hm.size() > 0) {
+            linearLayoutNextbtn.setVisibility(View.VISIBLE);
+        } else {
+            linearLayoutNextbtn.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onClickRemove(Course course) {
         EventBus.getDefault().post(new RemoveCourseEvent(course));
         addcourse_hm.remove(course.getCourseId());
-
+        if (addcourse_hm.size() > 0) {
+            linearLayoutNextbtn.setVisibility(View.VISIBLE);
+        } else {
+            linearLayoutNextbtn.setVisibility(View.GONE);
+        }
     }
 
     @Override
