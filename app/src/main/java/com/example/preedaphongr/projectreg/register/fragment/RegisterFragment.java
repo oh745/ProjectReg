@@ -18,10 +18,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
+import android.widget.Button;
 
 import com.example.preedaphongr.projectreg.R;
 import com.example.preedaphongr.projectreg.register.adapter.RegisterAdapter;
 import com.example.preedaphongr.projectreg.register.model.Course;
+import com.example.preedaphongr.projectreg.register.model.RegisterRequest;
+import com.example.preedaphongr.projectreg.register.model.RegisterResponse;
+import com.example.preedaphongr.projectreg.register.service.RegisterAPI;
 import com.example.preedaphongr.projectreg.util.AddCourseEvent;
 import com.example.preedaphongr.projectreg.util.RemoveCourseEvent;
 import com.example.preedaphongr.projectreg.util.RemoveFromRegisterEvent;
@@ -32,8 +36,14 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,8 +66,11 @@ public class RegisterFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-    @Bind(R.id.list_register)
-    RecyclerView recyclerView;
+    @Bind(R.id.list_register) RecyclerView recyclerView;
+    @Bind(R.id.register_button)Button registerButton;
+
+    @Inject
+    Retrofit retrofit;
 
     private RegisterAdapter adapter;
 
@@ -175,7 +188,36 @@ public class RegisterFragment extends Fragment {
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(recyclerView);
 
+        setRegisterButton();
         return view;
+    }
+
+    private void setRegisterButton() {
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(retrofit != null){
+                    RegisterAPI api = retrofit.create(RegisterAPI.class);
+                    Call<RegisterResponse> call = api.getFacultyList(new RegisterRequest());
+                    call.enqueue(new Callback<RegisterResponse>() {
+                        @Override
+                        public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                            if (response.isSuccessful()) {
+
+                            } else {
+
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<RegisterResponse> call, Throwable t) {
+
+                        }
+                    });
+                }
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event

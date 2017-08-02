@@ -16,7 +16,7 @@ import dagger.Component;
 public interface SearchCourseComponent {
 
         void inject(MainActivity mainActivity);
-        //void inject(SearchCourseFragment searchCourseFragment);
+        void inject(SearchCourseFragment searchCourseFragment);
         //void inject(SearchCoursePresenter searchCoursePresenter);
         //void inject(SearchCourseService searchCourseService);
 }

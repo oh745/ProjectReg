@@ -7,6 +7,11 @@
 
             android:title="@string/register" />
 
+       <!-- <item
+            android:id="@+id/nav_edit"
+
+            android:title="แก้ไข" />-->
+
         <item
             android:id="@+id/nav_logout"
 

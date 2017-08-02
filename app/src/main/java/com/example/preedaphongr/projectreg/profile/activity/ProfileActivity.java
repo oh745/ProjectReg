@@ -11,6 +11,8 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -27,6 +29,7 @@ import com.example.preedaphongr.projectreg.profile.model.PersonalRequest;
 import com.example.preedaphongr.projectreg.profile.model.PersonalResponse;
 import com.example.preedaphongr.projectreg.profile.service.ProfileAPI;
 import com.example.preedaphongr.projectreg.register.activity.MainActivity;
+import com.example.preedaphongr.projectreg.register.adapter.RegisterAdapter;
 
 import javax.inject.Inject;
 
@@ -56,6 +59,11 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     @Bind(R.id.drawer_layout)DrawerLayout drawerLayout;
     @Bind(R.id.name_textview)TextView mName;
     @Bind(R.id.major_textview)TextView mMajor;
+    @Bind(R.id.list_registered)RecyclerView recyclerView;
+    @Bind(R.id.nav_view)NavigationView navigationView;
+
+
+    private RegisterAdapter adapter;
 
     @Inject
     Retrofit retrofit;
@@ -76,7 +84,6 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         drawerLayout.setDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         ((BaseApplication)getApplication()).getProfileComponent()
@@ -85,6 +92,18 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         Intent intent = getIntent();
         String stdId = intent.getStringExtra("stdId");
         loadPersonal(stdId);
+
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        int size = navigationView.getMenu().size();
+        for (int i = 0; i < size; i++) {
+            navigationView.getMenu().getItem(i).setChecked(false);
+        }
     }
 
     private void loadPersonal(String stdId){
@@ -117,6 +136,10 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         mName.setText(personalResponse.getFirstName() + " " + personalResponse.getLastName());
         mMajor.setText("คณะ" + personalResponse.getMajorName());
         mTitle.setText(personalResponse.getFirstName() + " " + personalResponse.getLastName());
+
+        adapter = new RegisterAdapter(personalResponse.getRegisteredList());
+        recyclerView.setAdapter(adapter);
+
     }
 
     @Override
@@ -127,6 +150,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         handleAlphaOnTitle(percentage);
         handleToolbarTitleVisibility(percentage);
     }
+
     private void handleToolbarTitleVisibility(float percentage) {
         if (percentage >= PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR) {
 
@@ -187,8 +211,8 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
             finish();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+
+        drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 }

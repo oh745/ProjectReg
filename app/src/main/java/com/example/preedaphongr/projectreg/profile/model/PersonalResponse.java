@@ -1,6 +1,7 @@
 package com.example.preedaphongr.projectreg.profile.model;
 
 import com.example.preedaphongr.projectreg.login.model.*;
+import com.example.preedaphongr.projectreg.register.model.Course;
 
 import java.util.List;
 
@@ -14,7 +15,7 @@ public class PersonalResponse {
     private String lastName;
     private String majorId;
     private String majorName;
-    private List<EnrolledCourse> registeredList;
+    private List<Course> registeredList;
 
     public String getStdId() {
         return stdId;
@@ -56,11 +57,11 @@ public class PersonalResponse {
         this.majorName = majorName;
     }
 
-    public List<EnrolledCourse> getRegisteredList() {
+    public List<Course> getRegisteredList() {
         return registeredList;
     }
 
-    public void setRegisteredList(List<EnrolledCourse> registeredList) {
+    public void setRegisteredList(List<Course> registeredList) {
         this.registeredList = registeredList;
     }
 }

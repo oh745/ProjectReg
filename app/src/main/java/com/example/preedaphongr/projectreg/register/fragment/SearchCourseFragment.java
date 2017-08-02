@@ -38,6 +38,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Retrofit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -71,6 +72,9 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
     @Bind(R.id.search_list)RecyclerView recyclerView;
 
     @Bind(R.id.search_button)Button searchButton;
+
+    @Inject
+    Retrofit retrofit;
 
     //@Inject
     SearchCoursePresenter searchCoursePresenter;
@@ -108,6 +112,11 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        if(retrofit != null){
+            //********** call service get all faculty
+
+        }
+
     }
 
     @Override
@@ -143,17 +152,8 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
         spinnerSemester.setAdapter(adapterSemester);
         spinnerSemester.setSelection(adapterSemester.getCount());
 
-        /*List<Course> list = new ArrayList<>();
-        list.add(null);
-        list.add(null);list.add(null);
-        list.add(null);list.add(null);
-        list.add(null);list.add(null);
-        list.add(null);list.add(null);
-        list.add(null);*/
 
         setSearchButton();
-
-
 
 
         searchCoursePresenter = new SearchCoursePresenter();

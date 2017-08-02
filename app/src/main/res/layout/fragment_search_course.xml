@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.preedaphongr.projectreg.register.fragment.SearchCourseFragment">
+    tools:context="com.example.preedaphongr.projectreg.register.fragment.SearchCourseFragment"
+    android:weightSum="1">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -37,12 +38,35 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/lineSeparate"
-    />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/search_list"
+        android:background="@color/lineSeparate" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/row_search_course" />
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/row_search_course" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+    </LinearLayout>
 
 </LinearLayout>
