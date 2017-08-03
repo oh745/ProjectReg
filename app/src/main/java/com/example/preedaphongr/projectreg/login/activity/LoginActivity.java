@@ -62,7 +62,9 @@ public class LoginActivity extends AppCompatActivity {
                 if (stdId.equals("") || password.equals("")) {
                     Toast.makeText(getBaseContext(), getResources().getText(R.string.login_alert), Toast.LENGTH_SHORT).show();
                 } else {
+                        //loginSuccess(null);
                         loginRequest(stdId,password);
+
                 }
 
             }

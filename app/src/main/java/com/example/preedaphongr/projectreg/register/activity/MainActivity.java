@@ -124,12 +124,6 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
 
     @Override
     public void onBackPressed() {
@@ -148,9 +142,6 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        }
         if(id == android.R.id.home){
             super.onBackPressed();
             return true;

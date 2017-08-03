@@ -5,4 +5,13 @@ package com.example.preedaphongr.projectreg.register.model;
  */
 
 public class RegisterResponse {
+    private int status;
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }

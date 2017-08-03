@@ -35,6 +35,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,12 +45,13 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         AppBarLayout.OnOffsetChangedListener{
 
 
-    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.9f;
+    private static final float PERCENTAGE_TO_SHOW_TITLE_AT_TOOLBAR  = 0.5f;
     private static final float PERCENTAGE_TO_HIDE_TITLE_DETAILS     = 0.3f;
     private static final int ALPHA_ANIMATIONS_DURATION              = 200;
 
     private boolean mIsTheTitleVisible          = false;
     private boolean mIsTheTitleContainerVisible = true;
+
 
 
     @Bind(R.id.main_toolbar)Toolbar mToolbar;
@@ -61,6 +63,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     @Bind(R.id.major_textview)TextView mMajor;
     @Bind(R.id.list_registered)RecyclerView recyclerView;
     @Bind(R.id.nav_view)NavigationView navigationView;
+    @Bind(R.id.circle_imageView)CircleImageView circleImageView;
 
 
     private RegisterAdapter adapter;
@@ -77,7 +80,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         mAppBarLayout.addOnOffsetChangedListener(this);
-        mToolbar.inflateMenu(R.menu.menu_main);
+        //mToolbar.inflateMenu(R.menu.menu_main);
         startAlphaAnimation(mTitle, 0, View.INVISIBLE);
 
         ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this,drawerLayout, mToolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
@@ -156,6 +159,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
             if(!mIsTheTitleVisible) {
                 startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.VISIBLE);
+                circleImageView.setVisibility(View.INVISIBLE);
                 mIsTheTitleVisible = true;
             }
 
@@ -163,6 +167,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
             if (mIsTheTitleVisible) {
                 startAlphaAnimation(mTitle, ALPHA_ANIMATIONS_DURATION, View.INVISIBLE);
+                circleImageView.setVisibility(View.VISIBLE);
                 mIsTheTitleVisible = false;
             }
         }
