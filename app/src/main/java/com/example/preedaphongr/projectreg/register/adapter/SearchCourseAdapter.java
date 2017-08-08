@@ -15,6 +15,7 @@ import com.example.preedaphongr.projectreg.R;
 import com.example.preedaphongr.projectreg.register.fragment.SearchCourseFragment;
 import com.example.preedaphongr.projectreg.register.model.Course;
 
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -30,15 +31,22 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
     List<Course> mValues;
     Context mContext;
     SearchAdapterCallback callback;
-    public SearchCourseAdapter(Context mContext,List<Course> mValues,SearchAdapterCallback callback) {
+    int mCurrentTerm;
+    HashMap<String,Boolean> mRegisteredMap;
+
+    public SearchCourseAdapter(Context mContext, List<Course> mValues, SearchAdapterCallback callback, int mCurrentTerm , HashMap<String,Boolean> mRegisteredMap) {
         this.mContext = mContext;
         this.mValues = mValues;
         this.callback = callback;
+        this.mCurrentTerm = mCurrentTerm;
+        this.mRegisteredMap = mRegisteredMap;
     }
 
     public interface SearchAdapterCallback{
         void onClickAdd(Course course);
         void onClickRemove(Course course);
+        void onFailAdd();
+        void onAlreadyAdd();
     }
 
     @Override
@@ -98,9 +106,22 @@ public class SearchCourseAdapter extends RecyclerView.Adapter<SearchCourseAdapte
                         //mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_outline_black_24dp);
                         callback.onClickRemove(mValues.get(getAdapterPosition()));
                     } else {
-                        mAddCourse.setSelected(true);
-                        //mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_black_24dp);
-                        callback.onClickAdd(mValues.get(getAdapterPosition()));
+                        if(mRegisteredMap.get(mValues.get(getAdapterPosition()).getCourseId()) != null){
+                            mAddCourse.setChecked(false);
+                            mAddCourse.setSelected(false);
+                            callback.onAlreadyAdd();
+                        }
+                        else if(mCurrentTerm == mValues.get(getAdapterPosition()).getTerm()){
+                            mAddCourse.setSelected(true);
+                            //mAddCourse.setButtonDrawable(R.drawable.ic_add_circle_black_24dp);
+                            callback.onClickAdd(mValues.get(getAdapterPosition()));
+                        }
+                        else {
+                            mAddCourse.setChecked(false);
+                            mAddCourse.setSelected(false);
+                            callback.onFailAdd();
+                        }
+
                     }
 
 

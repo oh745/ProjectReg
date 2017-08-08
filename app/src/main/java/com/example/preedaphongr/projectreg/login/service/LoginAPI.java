@@ -13,6 +13,6 @@ import retrofit2.http.POST;
 
 public interface LoginAPI {
 
-    @POST("loginData")
+    @POST("student/Login")
     Call<LoginResponse> getRegisterList(@Body LoginRequest loginRequest);
 }

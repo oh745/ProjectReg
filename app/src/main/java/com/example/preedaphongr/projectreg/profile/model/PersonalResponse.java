@@ -1,6 +1,5 @@
 package com.example.preedaphongr.projectreg.profile.model;
 
-import com.example.preedaphongr.projectreg.login.model.*;
 import com.example.preedaphongr.projectreg.register.model.Course;
 
 import java.util.List;
@@ -13,9 +12,11 @@ public class PersonalResponse {
     private String stdId;
     private String firstName;
     private String lastName;
-    private String majorId;
+    private int majorId;
+    private int educationLevel;
+    private int currentTerm;
     private String majorName;
-    private List<Course> registeredList;
+    private List<Course> courseListInfo;
 
     public String getStdId() {
         return stdId;
@@ -41,11 +42,11 @@ public class PersonalResponse {
         this.lastName = lastName;
     }
 
-    public String getMajorId() {
+    public int getMajorId() {
         return majorId;
     }
 
-    public void setMajorId(String majorId) {
+    public void setMajorId(int majorId) {
         this.majorId = majorId;
     }
 
@@ -57,11 +58,27 @@ public class PersonalResponse {
         this.majorName = majorName;
     }
 
-    public List<Course> getRegisteredList() {
-        return registeredList;
+    public List<Course> getCourseListInfo() {
+        return courseListInfo;
     }
 
-    public void setRegisteredList(List<Course> registeredList) {
-        this.registeredList = registeredList;
+    public void setCourseListInfo(List<Course> courseListInfo) {
+        this.courseListInfo = courseListInfo;
+    }
+
+    public int getEducationLevel() {
+        return educationLevel;
+    }
+
+    public void setEducationLevel(int educationLevel) {
+        this.educationLevel = educationLevel;
+    }
+
+    public int getCurrentTerm() {
+        return currentTerm;
+    }
+
+    public void setCurrentTerm(int currentTerm) {
+        this.currentTerm = currentTerm;
     }
 }

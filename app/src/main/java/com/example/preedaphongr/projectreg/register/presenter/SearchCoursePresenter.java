@@ -37,8 +37,8 @@ public class SearchCoursePresenter {
     }
 
 
-    public void sendSearchCourseRequest(int majorId ,int semester){
-        searchCourseService.loadCourse(new CourseRequest(majorId,semester)).enqueue(new Callback<CourseResponse>() {
+    public void sendSearchCourseRequest(int majorId ,int semester,int majorStd){
+        searchCourseService.loadCourse(new CourseRequest(majorId,semester,majorStd)).enqueue(new Callback<CourseResponse>() {
             @Override
             public void onResponse(Call<CourseResponse> call, Response<CourseResponse> response) {
                 if(response.isSuccessful()){

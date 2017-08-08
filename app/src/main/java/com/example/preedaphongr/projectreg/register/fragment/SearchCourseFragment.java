@@ -1,9 +1,13 @@
 package com.example.preedaphongr.projectreg.register.fragment;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,17 +23,24 @@ import android.widget.Toast;
 
 import com.example.preedaphongr.projectreg.BaseApplication;
 import com.example.preedaphongr.projectreg.R;
+import com.example.preedaphongr.projectreg.profile.activity.ProfileActivity;
 import com.example.preedaphongr.projectreg.register.activity.MainActivity;
+import com.example.preedaphongr.projectreg.register.adapter.RegisterAdapter;
 import com.example.preedaphongr.projectreg.register.adapter.SearchCourseAdapter;
 import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.register.model.CourseResponse;
+import com.example.preedaphongr.projectreg.register.model.RegisterRequest;
+import com.example.preedaphongr.projectreg.register.model.RegisterResponse;
 import com.example.preedaphongr.projectreg.register.presenter.SearchCoursePresenter;
+import com.example.preedaphongr.projectreg.register.service.RegisterAPI;
 import com.example.preedaphongr.projectreg.util.AddCourseEvent;
+import com.example.preedaphongr.projectreg.util.RegisteredCourseEvent;
 import com.example.preedaphongr.projectreg.util.RemoveCourseEvent;
 import com.example.preedaphongr.projectreg.util.RemoveFromRegisterEvent;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,7 +50,12 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,8 +75,8 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
     private String mParam1;
     private String mParam2;
 
-    String[] faculty = {"คณะวิทย์","คณะแพทย์","คณะรัฐศาสตร์","คณะนิติศาสตร์","เลือกคณะ"};
-    String[] semester = {"ทั้งหมด","1","2","เลือกภาคเรียน"};
+    String[] faculty = {"คณะนิติศาสตร์","คณะพาณิชยศาสตร์และการบัญชี","คณะรัฐศาสตร์","คณะเศรษฐศาสตร์","คณะสังคมสงเคราะห์ศาสตร์","คณะศิลปศาสตร์","คณะวารสารศาสตร์และสื่อสารมวลชน,","คณะแพทยศาสตร์","คณะวิทยาศาสตร์ศาสตร์และเทคโนโลยี","คณะวิศวกรรมศาสตร์","เลือกคณะ"};
+    String[] semester = {"ทั้งหมด","ภาคเรียนที่ 1","ภาคเรียนที่ 2","เลือกภาคเรียน"};
 
     private OnFragmentInteractionListener mListener;
 
@@ -74,6 +90,7 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
     @Bind(R.id.search_button)Button searchButton;
     @Bind(R.id.layout_next_button)LinearLayout linearLayoutNextbtn;
+    @Bind(R.id.register_btn)Button regButton;
 
     @Inject
     Retrofit retrofit;
@@ -83,7 +100,9 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
     private SearchCourseAdapter adapter;
 
-    public static HashMap<String,Boolean> addcourse_hm = new HashMap<>();
+    public static HashMap<String,Course> addcourse_hm = new HashMap<>();
+    private static List<Course> list_register = new ArrayList<>();
+    private HashMap<String ,Boolean> registered_map;
 
     public SearchCourseFragment() {
         // Required empty public constructor
@@ -166,6 +185,7 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
 
         setSearchButton();
+        setRegButton();
 
 
         searchCoursePresenter = new SearchCoursePresenter();
@@ -174,17 +194,90 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
         return view;
     }
 
+    private void setRegButton() {
+        regButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showConfirmDialog();
+            }
+        });
+
+    }
+
+    private void showConfirmDialog() {
+        AlertDialog.Builder dialog = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        dialog.setTitle("รายวิชาที่ลง");
+        dialog.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //Log.d("@@@","regis click");
+                mainActivity.register(list_register);
+            }
+        });
+        dialog.setNegativeButton(getResources().getString(R.string.cancel),null);
+
+        final View viewInflate = inflater.inflate(R.layout.fragment_register, null);
+        RecyclerView recyclerView = viewInflate.findViewById(R.id.list_register);
+        list_register.clear();
+        list_register.addAll(addcourse_hm.values());
+        RegisterAdapter adapter = new RegisterAdapter(list_register,getContext());
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        dialog.setView(viewInflate);
+        AlertDialog alert = dialog.create();
+        alert.show();
+
+    }
+
+    public void showFailDialog(String message) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setMessage(message);
+        alertDialog.setPositiveButton("ตกลง", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        alertDialog.create();
+        alertDialog.show();
+    }
+
+    public void showSuccessDialog() {
+        list_register.clear();
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getActivity());
+        alertDialog.setTitle("ลงทะเบียนเรียบร้อย");
+        alertDialog.setIcon(R.drawable.ic_check_circle_black_36dp);
+        alertDialog.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                list_register.clear();
+                addcourse_hm.clear();
+                SharedPreferences editor = getActivity().getSharedPreferences("mypref",MODE_PRIVATE);
+                String stdId = editor.getString("stdId","");
+                Intent intent = new Intent(getContext(), ProfileActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("stdId",stdId);
+                getContext().startActivity(intent);
+            }
+        });
+        alertDialog.setCancelable(false);
+        alertDialog.create();
+        alertDialog.show();
+    }
+
     private void setSearchButton() {
         searchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (spinnerMajor.getSelectedItemPosition() < faculty.length - 1 &&
                         spinnerSemester.getSelectedItemPosition() < semester.length - 1) {
-                    String major = spinnerMajor.getSelectedItem().toString();
+                    int major = spinnerMajor.getSelectedItemPosition()+1;
                     int semester = spinnerSemester.getSelectedItemPosition();
                     //searchCoursePresenter.sendSearchCourseRequest(1,semester);
-                    Log.d("@@@",String.valueOf(semester));
-                    mainActivity.callRetrofit(semester);
+                    //Log.d("@@@",String.valueOf(semester));
+                    mainActivity.callRetrofit(semester,major);
 
                 } else {
                     Toast.makeText(getContext(), "กรุณาเลือกคณะและภาคเรียน", Toast.LENGTH_SHORT).show();
@@ -192,6 +285,7 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
             }
         });
     }
+
 
     MainActivity mainActivity;
     public void setMainActivity(MainActivity mainActivity){
@@ -224,16 +318,18 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
     @Override
     public void setAdapter(CourseResponse courseResponse) {
-        adapter = new SearchCourseAdapter(getContext(),courseResponse.getCourseList(),this);
+        SharedPreferences editor = getActivity().getSharedPreferences("mypref",MODE_PRIVATE);
+        int currentTerm = editor.getInt("currentTerm",1);
+        adapter = new SearchCourseAdapter(getContext(),courseResponse.getCourseList(),this,currentTerm,registered_map);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
     @Override
     public void onClickAdd(Course course) {
-        EventBus.getDefault().post(new AddCourseEvent(course));
-        addcourse_hm.put(course.getCourseId(),true);
-        Log.d("@@@","******************event bus post*******************");
+        //EventBus.getDefault().post(new AddCourseEvent(course));
+        addcourse_hm.put(course.getCourseId(),course);
+        //Log.d("@@@","******************event bus post*******************");
         if (addcourse_hm.size() > 0) {
             linearLayoutNextbtn.setVisibility(View.VISIBLE);
         } else {
@@ -243,13 +339,23 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
     @Override
     public void onClickRemove(Course course) {
-        EventBus.getDefault().post(new RemoveCourseEvent(course));
+        //EventBus.getDefault().post(new RemoveCourseEvent(course));
         addcourse_hm.remove(course.getCourseId());
         if (addcourse_hm.size() > 0) {
             linearLayoutNextbtn.setVisibility(View.VISIBLE);
         } else {
             linearLayoutNextbtn.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onFailAdd() {
+        showFailDialog(getContext().getResources().getString(R.string.alert_register));
+    }
+
+    @Override
+    public void onAlreadyAdd() {
+        showFailDialog(getContext().getResources().getString(R.string.already_register));
     }
 
     @Override
@@ -264,11 +370,10 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe
-    public void onRemoveFromRegisterEvent(RemoveFromRegisterEvent fromRegisterEvent){
-        addcourse_hm.remove(fromRegisterEvent.course.getCourseId());
-        adapter.notifyDataSetChanged();
-
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onRegisteredCourseEvent(RegisteredCourseEvent registeredCourseEvent){
+        Log.d("@@@","******************event bus receive*******************");
+        registered_map = registeredCourseEvent.course;
     }
 
 

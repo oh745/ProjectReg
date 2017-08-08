@@ -7,10 +7,12 @@ package com.example.preedaphongr.projectreg.register.model;
 public class CourseRequest {
     private int term;
     private int majorId;
+    private int majorStd;
 
-    public CourseRequest(int term, int majorId) {
+    public CourseRequest(int term, int majorId, int majorStd) {
         this.term = term;
         this.majorId = majorId;
+        this.majorStd = majorStd;
     }
 
     public int getTerm() {
@@ -27,5 +29,13 @@ public class CourseRequest {
 
     public void setMajorId(int majorId) {
         this.majorId = majorId;
+    }
+
+    public int getMajorStd() {
+        return majorStd;
+    }
+
+    public void setMajorStd(int majorStd) {
+        this.majorStd = majorStd;
     }
 }

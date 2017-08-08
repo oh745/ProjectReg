@@ -17,6 +17,6 @@ public class RegisterService {
     }
 
     public Call<RegisterResponse> getRegisterResponse(RegisterRequest registerRequest){
-        return registerAPI.getFacultyList(registerRequest);
+        return registerAPI.sendCourse(registerRequest);
     }
 }

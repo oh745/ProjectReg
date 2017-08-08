@@ -14,6 +14,6 @@ import retrofit2.http.POST;
 
 public interface SearchCourseAPI {
 
-    @POST("searchData")
+    @POST("course/inqCourseList")
     Call<CourseResponse> getCourseList(@Body CourseRequest courseRequest);
 }

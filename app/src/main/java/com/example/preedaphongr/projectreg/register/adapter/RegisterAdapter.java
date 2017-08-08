@@ -1,5 +1,6 @@
 package com.example.preedaphongr.projectreg.register.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +22,11 @@ import butterknife.ButterKnife;
 public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHolder> {
 
     private List<Course> mValues;
-    public RegisterAdapter(List<Course> mValues) {
+    private Context mContext;
+    public RegisterAdapter(List<Course> mValues ,Context mContext) {
+
         this.mValues = mValues;
+        this.mContext = mContext;
     }
 
     @Override
@@ -36,6 +40,8 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
 
         holder.mCourseId.setText(mValues.get(position).getCourseId());
         holder.mCourseName.setText(mValues.get(position).getCourseName());
+        holder.mTerm.setText(mContext.getResources().getString(R.string.semester) + String.valueOf(mValues.get(position).getTerm()));
+        holder.mYear.setText(mContext.getResources().getString(R.string.year) + mValues.get(position).getYear());
     }
 
     @Override
@@ -47,6 +53,8 @@ public class RegisterAdapter extends RecyclerView.Adapter<RegisterAdapter.ViewHo
 
         @Bind(R.id.courseId_textView)TextView mCourseId;
         @Bind(R.id.courseName_textView)TextView mCourseName;
+        @Bind(R.id.term_textView)TextView mTerm;
+        @Bind(R.id.year_textView)TextView mYear;
 
 
         public ViewHolder(View itemView) {

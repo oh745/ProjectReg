@@ -1,5 +1,6 @@
 package com.example.preedaphongr.projectreg.register.activity;
 
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -25,9 +26,16 @@ import com.example.preedaphongr.projectreg.BaseApplication;
 import com.example.preedaphongr.projectreg.R;
 import com.example.preedaphongr.projectreg.register.fragment.RegisterFragment;
 import com.example.preedaphongr.projectreg.register.fragment.SearchCourseFragment;
+import com.example.preedaphongr.projectreg.register.model.Course;
 import com.example.preedaphongr.projectreg.register.model.CourseRequest;
 import com.example.preedaphongr.projectreg.register.model.CourseResponse;
+import com.example.preedaphongr.projectreg.register.model.RegisterRequest;
+import com.example.preedaphongr.projectreg.register.model.RegisterResponse;
+import com.example.preedaphongr.projectreg.register.service.RegisterAPI;
 import com.example.preedaphongr.projectreg.register.service.SearchCourseAPI;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -50,13 +58,13 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
      */
     private SectionsPagerAdapter mSectionsPagerAdapter;
     private SearchCourseFragment searchCourseFragment;
-    private RegisterFragment registerFragment;
+    //private RegisterFragment registerFragment;
 
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    private ViewPager mViewPager;
-    private TabLayout tabLayout;
+    @Bind(R.id.container)ViewPager mViewPager;
+    //@Bind(R.id.tabs)TabLayout tabLayout;
 
     @Bind(R.id.toolbar)Toolbar toolbar;
 
@@ -82,13 +90,8 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
         //final AppBarLayout.LayoutParams params = (AppBarLayout.LayoutParams) toolbarLayout.getLayoutParams();
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
-
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
-
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        //tabLayout.setupWithViewPager(mViewPager);
 
 
         ((BaseApplication)getApplication()).getSearchCourseComponent()
@@ -98,14 +101,17 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
     }
 
 
-    public void callRetrofit(int term){
+    public void callRetrofit(int term ,int major){
         if(retrofit != null){
             //Toast.makeText(getBaseContext(),"ok",Toast.LENGTH_SHORT).show();
+            SharedPreferences prefs = getSharedPreferences("mypref", MODE_PRIVATE);
+            int majorStd = prefs.getInt("majorStd",0);
             SearchCourseAPI api = retrofit.create(SearchCourseAPI.class);
-            Call call = api.getCourseList(new CourseRequest(term,1));
+            Call call = api.getCourseList(new CourseRequest(term,major,majorStd));
             call.enqueue(new Callback<CourseResponse>() {
                 @Override
                 public void onResponse(Call<CourseResponse> call, Response<CourseResponse> response) {
+
                     if(response.isSuccessful()){
                         Log.d("@@@","******************success********************");
                         searchCourseFragment.setAdapter(response.body());
@@ -119,11 +125,52 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
                 @Override
                 public void onFailure(Call<CourseResponse> call, Throwable t) {
                     Log.d("@@@","******************Fail********************");
+                    Log.d("@@@",t.getMessage());
                 }
             });
         }
     }
 
+    public void register(List<Course> list_register){
+        if(retrofit == null){
+            return;
+        }
+
+        SharedPreferences prefs = getSharedPreferences("mypref", MODE_PRIVATE);
+        String stdId = prefs.getString("stdId", null);
+        RegisterAPI api = retrofit.create(RegisterAPI.class);
+        List<String> list = new ArrayList<String>();
+        for (int j = 0; j < list_register.size(); j++) {
+            list.add(list_register.get(j).getCourseId());
+        }
+        Call<RegisterResponse> call = api.sendCourse(new RegisterRequest(stdId,list));
+        call.enqueue(new Callback<RegisterResponse>() {
+            @Override
+            public void onResponse(Call<RegisterResponse> call, Response<RegisterResponse> response) {
+                if (response.isSuccessful()) {
+                    Log.d("@@@","******************success********************");
+                    if (response.body().getStatus() == 1){
+                        //register success
+                        searchCourseFragment.showSuccessDialog();
+                    }
+                    else {
+                        //register fail
+                        searchCourseFragment.showFailDialog("ไม่สามารถลงทะเบียนได้");
+                    }
+
+                } else {
+                    Log.d("@@@","******************unsuccess********************");
+                    Log.d("@@@",response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RegisterResponse> call, Throwable t) {
+                Log.d("@@@","******************Fail********************");
+            }
+        });
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -175,8 +222,8 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
                     setConnection();
                     return searchCourseFragment;
 
-                case 1: registerFragment = RegisterFragment.newInstance("","");
-                    return registerFragment;
+               /* case 1: registerFragment = RegisterFragment.newInstance("","");
+                    return registerFragment;*/
 
                 default:return null;
             }
@@ -187,10 +234,10 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
         @Override
         public int getCount() {
             // Show 2 total pages.
-            return 2;
+            return 1;
         }
 
-        @Override
+      /*  @Override
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
@@ -200,7 +247,7 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
 
             }
             return null;
-        }
+        }*/
     }
     public void setConnection(){
         searchCourseFragment.setMainActivity(this);

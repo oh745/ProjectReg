@@ -2,14 +2,13 @@ package com.example.preedaphongr.projectreg.login.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.preedaphongr.projectreg.BaseApplication;
@@ -62,6 +61,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (stdId.equals("") || password.equals("")) {
                     Toast.makeText(getBaseContext(), getResources().getText(R.string.login_alert), Toast.LENGTH_SHORT).show();
                 } else {
+
                         //loginSuccess(null);
                         loginRequest(stdId,password);
 
@@ -73,7 +73,8 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void loginRequest(String username,String password){
+
+    private void loginRequest(String username, String password){
         password = MD5.encrypt(password);
         if(retrofit != null){
             LoginAPI api = retrofit.create(LoginAPI.class);
@@ -99,11 +100,14 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
                     Log.d("@@@","******************Fail********************");
+                    Log.d("@@@",t.getMessage());
                 }
             });
         }
 
     }
+
+
 
     private void loginSuccess(LoginResponse loginResponse){
 
@@ -111,9 +115,9 @@ public class LoginActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("stdId",stdId);
         startActivity(intent);
-
         finish();
 
     }
+
 
 }

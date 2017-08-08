@@ -1,15 +1,16 @@
 package com.example.preedaphongr.projectreg.profile.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,7 +21,6 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.preedaphongr.projectreg.BaseApplication;
 import com.example.preedaphongr.projectreg.R;
@@ -30,6 +30,13 @@ import com.example.preedaphongr.projectreg.profile.model.PersonalResponse;
 import com.example.preedaphongr.projectreg.profile.service.ProfileAPI;
 import com.example.preedaphongr.projectreg.register.activity.MainActivity;
 import com.example.preedaphongr.projectreg.register.adapter.RegisterAdapter;
+import com.example.preedaphongr.projectreg.register.model.Course;
+import com.example.preedaphongr.projectreg.util.RegisteredCourseEvent;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.HashMap;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -64,9 +71,14 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     @Bind(R.id.list_registered)RecyclerView recyclerView;
     @Bind(R.id.nav_view)NavigationView navigationView;
     @Bind(R.id.circle_imageView)CircleImageView circleImageView;
-
+    @Bind(R.id.fast_reg_layout)LinearLayout mFastRegLinearLayout;
+    //@Bind(R.id.nav_name)TextView mNavName;
+    //@Bind(R.id.nav_major)TextView mNavMajor;
+    TextView mNavName;
+    TextView mNavMajor;
 
     private RegisterAdapter adapter;
+    private List<Course> list_registered;
 
     @Inject
     Retrofit retrofit;
@@ -77,6 +89,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //setSupportActionBar(toolbar);
         mAppBarLayout.addOnOffsetChangedListener(this);
@@ -88,6 +101,9 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         drawerToggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+        mNavName = headerView.findViewById(R.id.nav_name);
+        mNavMajor = headerView.findViewById(R.id.nav_major);
 
         ((BaseApplication)getApplication()).getProfileComponent()
                 .inject(this);
@@ -97,19 +113,29 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         loadPersonal(stdId);
 
 
+        setFastRegLayout();
         recyclerView.setLayoutManager(new LinearLayoutManager(getBaseContext()));
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        clearCheckNavView();
+    }
+
+
+    private void clearCheckNavView(){
         int size = navigationView.getMenu().size();
         for (int i = 0; i < size; i++) {
             navigationView.getMenu().getItem(i).setChecked(false);
         }
+
     }
 
     private void loadPersonal(String stdId){
+        final SharedPreferences.Editor editor = getSharedPreferences("mypref", MODE_PRIVATE).edit();
+        editor.putString("stdId", stdId);
+        editor.commit();
         if(retrofit != null){
             ProfileAPI api = retrofit.create(ProfileAPI.class);
             Call call = api.getPersonalData(new PersonalRequest(stdId));
@@ -117,18 +143,27 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
                 @Override
                 public void onResponse(Call<PersonalResponse> call, Response<PersonalResponse> response) {
                     if(response.isSuccessful()){
+
                         Log.d("@@@","******************success********************");
                         setShowData(response.body());
+                        Log.d("@@@","current term " + String .valueOf(response.body().getCurrentTerm()));
+                        editor.putInt("currentTerm", response.body().getCurrentTerm());
+                        editor.putInt("majorStd", response.body().getMajorId());
+                        editor.commit();
                     }
+
                     else {
+
                         Log.d("@@@","******************unsuccess********************");
                         Log.d("@@@",response.message());
+                        mFastRegLinearLayout.setVisibility(View.VISIBLE);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<PersonalResponse> call, Throwable t) {
                     Log.d("@@@","******************Fail********************");
+                    mFastRegLinearLayout.setVisibility(View.VISIBLE);
                 }
             });
         }
@@ -136,14 +171,90 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
     private void setShowData(PersonalResponse personalResponse){
 
+        mNavName.setText(personalResponse.getFirstName() + " " + personalResponse.getLastName());
+        mNavMajor.setText("คณะ" + personalResponse.getMajorName() +" ชั้นปีที่ " + String.valueOf(personalResponse.getEducationLevel()));
         mName.setText(personalResponse.getFirstName() + " " + personalResponse.getLastName());
-        mMajor.setText("คณะ" + personalResponse.getMajorName());
+        mMajor.setText("คณะ" + personalResponse.getMajorName() +" ชั้นปีที่ " + String.valueOf(personalResponse.getEducationLevel()));
         mTitle.setText(personalResponse.getFirstName() + " " + personalResponse.getLastName());
 
-        adapter = new RegisterAdapter(personalResponse.getRegisteredList());
-        recyclerView.setAdapter(adapter);
+        //Log.d("@@@",personalResponse.getCourseList().toString());
+        list_registered = personalResponse.getCourseListInfo();
+        if (list_registered.size() == 0) {
+            mFastRegLinearLayout.setVisibility(View.VISIBLE);
+        } else {
+            mFastRegLinearLayout.setVisibility(View.GONE);
+            adapter = new RegisterAdapter(list_registered,getBaseContext());
+            recyclerView.setAdapter(adapter);
+        }
 
     }
+
+    private void setFastRegLayout() {
+        mFastRegLinearLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                moveToMainActivity();
+            }
+        });
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_register) {
+            //Log.d("@@@","register");
+            moveToMainActivity();
+
+        } else if (id == R.id.nav_logout) {
+            //Log.d("@@@","logout");
+            showLogoutDialog();
+        }
+
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    private void moveToMainActivity(){
+        HashMap<String,Boolean> registered_map = new HashMap<>();
+        for (int i = 0; i < list_registered.size(); i++) {
+            registered_map.put(list_registered.get(i).getCourseId(),true);
+        }
+        Log.d("@@@","********************event bus post**************************");
+        EventBus.getDefault().postSticky(new RegisteredCourseEvent(registered_map));
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void showLogoutDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getResources().getString(R.string.logout_alert));
+        builder.setPositiveButton(getResources().getString(R.string.confirm), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                getSharedPreferences("mypref",MODE_PRIVATE).edit().clear().commit();
+
+                Intent intent = new Intent(getBaseContext(), LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+        builder.setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //dialog.dismiss();
+                clearCheckNavView();
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+
+    }
+
+
 
     @Override
     public void onOffsetChanged(AppBarLayout appBarLayout, int offset) {
@@ -199,25 +310,4 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
         v.startAnimation(alphaAnimation);
     }
 
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.nav_register) {
-            Log.d("@@@","register");
-            Intent intent = new Intent(this, MainActivity.class);
-            startActivity(intent);
-
-        } else if (id == R.id.nav_logout) {
-            Log.d("@@@","logout");
-            Intent intent = new Intent(this, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
-        }
-
-
-        drawerLayout.closeDrawer(GravityCompat.START);
-        return true;
-    }
 }

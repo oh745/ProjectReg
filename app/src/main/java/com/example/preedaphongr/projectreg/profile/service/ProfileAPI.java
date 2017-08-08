@@ -12,6 +12,6 @@ import retrofit2.http.POST;
  */
 
 public interface ProfileAPI {
-    @POST("personalData")
+    @POST("student/inqStudent")
     Call<PersonalResponse> getPersonalData(@Body PersonalRequest personalRequest);
 }

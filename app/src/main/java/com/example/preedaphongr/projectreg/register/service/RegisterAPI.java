@@ -13,6 +13,6 @@ import retrofit2.http.POST;
  */
 
 public interface RegisterAPI {
-    @POST("register")
-    Call<RegisterResponse> getFacultyList(@Body RegisterRequest registerRequest);
+    @POST("register/courses")
+    Call<RegisterResponse> sendCourse(@Body RegisterRequest registerRequest);
 }

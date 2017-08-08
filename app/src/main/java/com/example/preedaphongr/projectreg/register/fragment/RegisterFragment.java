@@ -67,7 +67,7 @@ public class RegisterFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     @Bind(R.id.list_register) RecyclerView recyclerView;
-    @Bind(R.id.register_button)Button registerButton;
+
 
     @Inject
     Retrofit retrofit;
@@ -82,7 +82,7 @@ public class RegisterFragment extends Fragment {
     public void onAddCourseEvent(AddCourseEvent addCourseEvent){
         list_register.add(addCourseEvent.course);
         adapter.notifyDataSetChanged();
-        Log.d("@@@","******************eventbus receive********************");
+        //Log.d("@@@","******************eventbus receive********************");
     }
     @Subscribe
     public void onRemoveCourseEvent(RemoveCourseEvent removeCourseEvent){
@@ -141,7 +141,7 @@ public class RegisterFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register, container, false);
         ButterKnife.bind(this,view);
-        adapter = new RegisterAdapter(list_register);
+        adapter = new RegisterAdapter(list_register,getContext());
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.LEFT) {
@@ -193,7 +193,7 @@ public class RegisterFragment extends Fragment {
     }
 
     private void setRegisterButton() {
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        /*registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -217,7 +217,7 @@ public class RegisterFragment extends Fragment {
                     });
                 }
             }
-        });
+        });*/
     }
 
     // TODO: Rename method, update argument and hook method into UI event
