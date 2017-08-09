@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.preedaphongr.projectreg.BaseApplication;
@@ -91,6 +92,7 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
     @Bind(R.id.search_button)Button searchButton;
     @Bind(R.id.layout_next_button)LinearLayout linearLayoutNextbtn;
     @Bind(R.id.register_btn)Button regButton;
+    @Bind(R.id.search_not_found_textView)TextView searchNotFoundTextView;
 
     @Inject
     Retrofit retrofit;
@@ -277,6 +279,7 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
                     int semester = spinnerSemester.getSelectedItemPosition();
                     //searchCoursePresenter.sendSearchCourseRequest(1,semester);
                     //Log.d("@@@",String.valueOf(semester));
+
                     mainActivity.callRetrofit(semester,major);
 
                 } else {
@@ -292,6 +295,14 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
         this.mainActivity = mainActivity;
     }
 
+    public void setSearchNotFoundTextView(boolean found){
+        if(found){
+            searchNotFoundTextView.setVisibility(View.GONE);
+        }
+        else {
+            searchNotFoundTextView.setVisibility(View.VISIBLE);
+        }
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -318,11 +329,18 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
     @Override
     public void setAdapter(CourseResponse courseResponse) {
+        if(courseResponse.getCourseList().size() == 0){
+            setSearchNotFoundTextView(false);
+        }
+        else {
+            setSearchNotFoundTextView(true);
+        }
         SharedPreferences editor = getActivity().getSharedPreferences("mypref",MODE_PRIVATE);
         int currentTerm = editor.getInt("currentTerm",1);
         adapter = new SearchCourseAdapter(getContext(),courseResponse.getCourseList(),this,currentTerm,registered_map);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
     }
 
     @Override
@@ -350,7 +368,7 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
     @Override
     public void onFailAdd() {
-        showFailDialog(getContext().getResources().getString(R.string.alert_register));
+        showFailDialog(getContext().getResources().getString(R.string.alert_wrong_term));
     }
 
     @Override

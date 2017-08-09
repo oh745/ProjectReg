@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements SearchCourseFragm
                     if(response.isSuccessful()){
                         Log.d("@@@","******************success********************");
                         searchCourseFragment.setAdapter(response.body());
+
                     }
                     else {
                         Log.d("@@@","******************unsuccess********************");

@@ -25,6 +25,8 @@
     <string name="here"><u>ที่นี่</u></string>
     <string name="already_register">คุณได้ลงทะเบียนวิชานี้ไปแล้ว</string>
     <string name="alert_register">"ไม่สามารถลงทะเบียนได้"</string>
+    <string name="alert_wrong_term">"ไม่สามารถลงทะเบียนข้ามเทอมได้"</string>
+    <string name="search_not_found">"ไม่พบรายวิชา"</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

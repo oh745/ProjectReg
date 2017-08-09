@@ -60,6 +60,14 @@
                         android:text="คณะวิทยาศาสตร์"
                         android:textColor="@android:color/white" />
 
+                    <TextView
+                        android:id="@+id/current_term_textView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="@string/semester"
+                        android:textColor="@android:color/white" />
+
                 </LinearLayout>
             </FrameLayout>
 

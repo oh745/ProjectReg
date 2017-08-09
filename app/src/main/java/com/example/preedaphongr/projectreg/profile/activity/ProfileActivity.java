@@ -68,6 +68,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
     @Bind(R.id.drawer_layout)DrawerLayout drawerLayout;
     @Bind(R.id.name_textview)TextView mName;
     @Bind(R.id.major_textview)TextView mMajor;
+    @Bind(R.id.current_term_textView)TextView mCurrentTerm;
     @Bind(R.id.list_registered)RecyclerView recyclerView;
     @Bind(R.id.nav_view)NavigationView navigationView;
     @Bind(R.id.circle_imageView)CircleImageView circleImageView;
@@ -171,6 +172,7 @@ public class ProfileActivity extends AppCompatActivity implements NavigationView
 
     private void setShowData(PersonalResponse personalResponse){
 
+        mCurrentTerm.append(" " + String.valueOf(personalResponse.getCurrentTerm()));
         mNavName.setText(personalResponse.getFirstName() + " " + personalResponse.getLastName());
         mNavMajor.setText("คณะ" + personalResponse.getMajorName() +" ชั้นปีที่ " + String.valueOf(personalResponse.getEducationLevel()));
         mName.setText(personalResponse.getFirstName() + " " + personalResponse.getLastName());
