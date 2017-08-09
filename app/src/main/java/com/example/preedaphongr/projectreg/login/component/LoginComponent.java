@@ -11,4 +11,5 @@ import dagger.Component;
 @Component(modules = NetworkModule.class)
 public interface LoginComponent {
     void inject(LoginActivity loginActivity);
+
 }

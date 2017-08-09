@@ -15,6 +15,7 @@ import com.example.preedaphongr.projectreg.BaseApplication;
 import com.example.preedaphongr.projectreg.R;
 import com.example.preedaphongr.projectreg.login.model.LoginRequest;
 import com.example.preedaphongr.projectreg.login.model.LoginResponse;
+import com.example.preedaphongr.projectreg.login.presenter.LoginPresenter;
 import com.example.preedaphongr.projectreg.login.service.LoginAPI;
 import com.example.preedaphongr.projectreg.profile.activity.ProfileActivity;
 import com.example.preedaphongr.projectreg.register.activity.MainActivity;
@@ -39,6 +40,9 @@ public class LoginActivity extends AppCompatActivity {
     @Inject
     Retrofit retrofit;
 
+    @Inject
+    LoginPresenter loginPresenter;
+
     private String stdId;
 
     @Override
@@ -52,6 +56,8 @@ public class LoginActivity extends AppCompatActivity {
 
         ((BaseApplication)getApplication()).getLoginComponent()
                 .inject(this);
+
+        loginPresenter.setPresenter();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override

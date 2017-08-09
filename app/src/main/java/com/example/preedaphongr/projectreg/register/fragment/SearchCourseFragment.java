@@ -171,8 +171,11 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
         adapterMajor.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerMajor.setAdapter(adapterMajor);
         spinnerMajor.setPrompt(getResources().getString(R.string.select_faculty));
-        spinnerMajor.setSelection(adapterMajor.getCount());
+        //spinnerMajor.setSelection(adapterMajor.getCount());
+        SharedPreferences prefs = getActivity().getSharedPreferences("mypref", MODE_PRIVATE);
 
+        spinnerMajor.setSelection( prefs.getInt("majorStd",adapterMajor.getCount()+1)-1 );
+    //Log.d("@@@", "major id "+ String.valueOf(prefs.getInt("majorStd",5)));
         ArrayAdapter<String> adapterSemester = new ArrayAdapter<String>(getContext(),
                 R.layout.support_simple_spinner_dropdown_item, semester){
             @Override
@@ -188,6 +191,8 @@ public class SearchCourseFragment extends Fragment implements SearchCoursePresen
 
         setSearchButton();
         setRegButton();
+
+
 
 
         searchCoursePresenter = new SearchCoursePresenter();
